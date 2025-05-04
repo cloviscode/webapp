@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Equipment - Solar Calculator{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Solar Power Equipment Calculator</h2>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Enter Equipment Details</h5>
+        </div>
+        <div class="card-body">
+            <form id="equipmentForm" method="POST">
+                <table class="table" id="equipmentTable">
+                    <thead>
+                        <tr>
+                            <th>Equipment Name</th>
+                            <th>Power (W)</th>
+                            <th>Runtime (h)</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="equipment-row">
+                            <td><input type="text" class="form-control" name="name_0" required></td>
+                            <td><input type="number" class="form-control" name="power_0" step="0.01" required></td>
+                            <td><input type="number" class="form-control" name="runtime_0" step="0.01" required></td>
+                            <td><input type="number" class="form-control" name="quantity_0" value="1" min="1"></td>
+                            <td><button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" id="addEquipment" class="btn btn-secondary mb-3">Add Equipment</button>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        let equipmentIndex = 1;
+        
+        $('#addEquipment').click(function() {
+            const newRow = `
+                <tr class="equipment-row">
+                    <td><input type="text" class="form-control" name="name_${equipmentIndex}" required></td>
+                    <td><input type="number" class="form-control" name="power_${equipmentIndex}" step="0.01" required></td>
+                    <td><input type="number" class="form-control" name="runtime_${equipmentIndex}" step="0.01" required></td>
+                    <td><input type="number" class="form-control" name="quantity_${equipmentIndex}" value="1" min="1"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button></td>
+                </tr>
+            `;
+            $('#equipmentTable tbody').append(newRow);
+            equipmentIndex++;
+        });
+        
+        $(document).on('click', '.remove-btn', function() {
+            if ($('.equipment-row').length > 1) {
+                $(this).closest('tr').remove();
+            } else {
+                alert('You must have at least one equipment item.');
+            }
+        });
+    });
+</script>
+{% endblock %}

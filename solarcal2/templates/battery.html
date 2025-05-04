@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Power Calculator - Battery Voltage{% endblock %}
+
+{% block head %}
+<style>
+    .voltage-info {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Battery System Configuration</h2>
+    <p class="lead mb-4">Choose the voltage for your battery system. This will affect the number of batteries needed.</p>
+    <div class="location-summary mb-4">
+        <h6>Location Summary:</h6>
+        <p>Solar Potential: {{ solar_potential }} kWh/m²/day</p>
+        <p>Recommended System Size: {{ recommended_size }} kW</p>
+    </div>
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Battery System Selection</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="voltage" class="form-label fw-bold">System Voltage</label>
+                    <select class="form-select form-select-lg mb-2" id="voltage" name="voltage" required>
+                        <option value="">-- Select Voltage --</option>
+                        <option value="12">12V System</option>
+                        <option value="24">24V System</option>
+                        <option value="48">48V System</option>
+                    </select>
+                    <div class="voltage-info">
+                        <p class="mb-1">• 12V - Recommended for small systems (less than 1kW)</p>
+                        <p class="mb-1">• 24V - Ideal for medium systems (1-3kW)</p>
+                        <p class="mb-1">• 48V - Best for large systems (more than 3kW)</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Continue</button>
+                    <a href="{{ url_for('location') }}" class="btn btn-outline-secondary btn-lg ms-2">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

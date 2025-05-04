@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Power Calculation Results{% endblock %}
+
+{% block head %}
+<style>
+    /* Results page specific styles */
+    @media (max-width: 768px) {
+        .card { margin-bottom: 20px; }
+        .table td, .table th {
+            white-space: normal;
+            min-width: 80px;
+        }
+        .alert ul { padding-left: 20px; }
+    }
+    
+    @media (max-width: 576px) {
+        .btn { 
+            display: block;
+            margin: 10px 0;
+        }
+        .col-md-6 {
+            padding: 0 5px;
+        }
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h2 class="mb-4 text-center">Your Solar Power System Results</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header">Equipment List</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Quantity</th>
+                            <th>Power (W)</th>
+                            <th>Runtime (h)</th>
+                            <th>Daily Energy (Wh)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipment %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.power }}</td>
+                            <td>{{ item.runtime }}</td>
+                            <td>{{ (item.power * item.runtime * item.quantity)|round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-primary">
+                            <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
+                            <td><strong>{{ total_energy }} Wh</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Solar Panel Requirements</div>
+                <div class="card-body">
+                    <p><strong>Assumptions:</strong></p>
+                    <ul>
+                        <li>Average Peak Sun Hours: {{ assumptions.sun_hours }} hours</li>
+                        <li>System Buffer: {{ assumptions.buffer }}</li>
+                    </ul>
+                    <p><strong>Estimated Solar Panel Power:</strong> {{ solar_panel_power }} W</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Battery Requirements</div>
+                <div class="card-body">
+                    <p><strong>Assumptions:</strong></p>
+                    <ul>
+                        <li>Battery Voltage: {{ voltage }} V</li>
+                        <li>Depth of Discharge (DoD): {{ assumptions.dod }}</li>
+                    </ul>
+                    <p><strong>Usable Battery Capacity:</strong> {{ usable_ah }} Ah</p>
+                    <p><strong>Total Required Battery Capacity:</strong> {{ total_battery_ah }} Ah</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">Inverter Requirements</div>
+        <div class="card-body">
+            <p><strong>Assumptions:</strong></p>
+            <ul>
+                <li>Inverter Efficiency: {{ inverter_efficiency }}%</li>
+            </ul>
+            <p><strong>Total Power Demand:</strong> {{ total_power_demand }} W</p>
+            <p><strong>Estimated Inverter Capacity:</strong> {{ inverter_capacity }} W</p>
+        </div>
+    </div>
+    
+    <div class="alert alert-info">
+        <h5>Important Notes:</h5>
+        <ul>
+            <li>These calculations are estimates based on provided inputs</li>
+            <li>Actual requirements may vary based on location and weather conditions</li>
+            <li>We recommend consulting with a solar professional for final system design</li>
+        </ul>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <a href="{{ url_for('download_pdf') }}" class="btn btn-success">Download PDF</a>
+        </div>
+        <div class="col-md-6">
+            <button onclick="window.print()" class="btn btn-primary">Print Results</button>
+        </div>
+    </div>
+    
+    <a href="{{ url_for('equipment') }}" class="btn btn-outline-primary">Restart Calculation</a>
+</div>
+{% endblock %}

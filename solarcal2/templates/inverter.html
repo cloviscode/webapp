@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Power Calculator - Inverter Efficiency{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Inverter Configuration</h2>
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Enter Inverter Details</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" id="inverterForm">
+                <div class="mb-3">
+                    <label for="efficiency" class="form-label fw-bold">Inverter Efficiency (%)</label>
+                    <input type="number" class="form-control form-control-lg" id="efficiency" 
+                           name="efficiency" placeholder="Enter efficiency (90-98)" 
+                           min="90" max="98" step="0.1" required>
+                    <div class="form-text">Most modern inverters operate at 90-98% efficiency</div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Continue</button>
+                    <a href="{{ url_for('battery') }}" class="btn btn-outline-secondary btn-lg ms-2">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#inverterForm').on('submit', function(e) {
+            const efficiency = parseFloat($('#efficiency').val());
+            if (efficiency < 90 || efficiency > 98) {
+                e.preventDefault();
+                alert('Please enter an efficiency value between 90% and 98%');
+            }
+        });
+    });
+</script>
+{% endblock %}
